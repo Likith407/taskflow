@@ -8,9 +8,9 @@ A full-stack task management application built with **Node.js/Express**, **Next.
 
 | Resource | Link |
 |---|---|
-| **Frontend (Vercel)** | `https://taskflow-app.vercel.app` *(replace with your URL)* |
-| **Backend API (Render)** | `https://taskflow-api.onrender.com` *(replace with your URL)* |
-| **GitHub** | `https://github.com/yourusername/taskflow` *(replace with your URL)* |
+| **Frontend (Vercel)** | `https://taskflow-frontend-alpha.vercel.app` |
+| **Backend API (Render)** | `https://taskflow-api-gz7u.onrender.com` |
+| **GitHub** | `https://github.com/Likith407/taskflow`  |
 
 ---
 
