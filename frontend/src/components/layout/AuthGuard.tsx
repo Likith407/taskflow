@@ -3,25 +3,17 @@
 import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/lib/store';
-import { authApi } from '@/lib/authApi';
 
 export function AuthGuard({ children }: { children: React.ReactNode }) {
   const router = useRouter();
-  const { isAuthenticated, isLoading, setUser, setLoading } = useAuthStore();
+  const { isAuthenticated, isLoading, setLoading } = useAuthStore();
 
   useEffect(() => {
-    const checkAuth = async () => {
-      try {
-        const res = await authApi.getMe();
-        if (res.data?.user) setUser(res.data.user);
-        else { setUser(null); router.replace('/auth/login'); }
-      } catch {
-        setUser(null);
-        router.replace('/auth/login');
-      }
-    };
-    checkAuth();
-  }, []);
+    setLoading(false);
+    if (!isAuthenticated) {
+      router.replace('/auth/login');
+    }
+  }, [isAuthenticated]);
 
   if (isLoading) {
     return (
