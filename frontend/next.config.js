@@ -1,12 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // No rewrites needed — frontend calls the API URL directly via env var
-  // Rewrites only make sense when frontend and API share a domain
-
-  // Strict mode for better React error detection in dev
   reactStrictMode: true,
-
-  // Security headers for the frontend
   async headers() {
     return [
       {
