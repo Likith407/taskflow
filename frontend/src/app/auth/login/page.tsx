@@ -31,7 +31,7 @@ export default function LoginPage() {
     try {
       const res = await authApi.login(data);
       if (res.data?.user) {
-        setUser(res.data.user);
+        setUser(res.data.user, res.data.accessToken);
         toast.success(`Welcome back, ${res.data.user.name.split(' ')[0]}!`);
         router.push('/dashboard');
       }

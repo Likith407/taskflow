@@ -41,7 +41,7 @@ export default function RegisterPage() {
     try {
       const res = await authApi.register({ name: data.name, email: data.email, password: data.password });
       if (res.data?.user) {
-        setUser(res.data.user);
+        setUser(res.data.user, res.data.accessToken);
         toast.success(`Account created! Welcome, ${res.data.user.name.split(' ')[0]}!`);
         router.push('/dashboard');
       }

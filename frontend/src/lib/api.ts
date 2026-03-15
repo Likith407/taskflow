@@ -1,10 +1,20 @@
 import axios from 'axios';
+import { useAuthStore } from './store';
 
 const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL || '/api',
-  withCredentials: true, // Send HTTP-only cookies
+  withCredentials: true,
   headers: { 'Content-Type': 'application/json' },
   timeout: 10000,
+});
+
+// Attach token from store to every request
+api.interceptors.request.use((config) => {
+  const token = useAuthStore.getState().accessToken;
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
 });
 
 let isRefreshing = false;
@@ -18,7 +28,6 @@ const processQueue = (error: unknown, token: string | null = null) => {
   failedQueue = [];
 };
 
-// Response interceptor: auto-refresh access token on 401
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
@@ -40,12 +49,19 @@ api.interceptors.response.use(
       isRefreshing = true;
 
       try {
-        await api.post('/auth/refresh');
-        processQueue(null);
+        const res = await api.post('/auth/refresh');
+        const newToken = res.data?.data?.accessToken;
+        if (newToken) {
+          useAuthStore.getState().setUser(
+            useAuthStore.getState().user,
+            newToken
+          );
+        }
+        processQueue(null, newToken);
         return api(originalRequest);
       } catch (refreshError) {
         processQueue(refreshError, null);
-        // Redirect to login on refresh failure
+        useAuthStore.getState().logout();
         if (typeof window !== 'undefined') {
           window.location.href = '/auth/login';
         }
